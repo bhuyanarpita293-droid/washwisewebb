@@ -132,7 +132,17 @@ button{
     height: 45px;
     border-radius: 50%;
 }
+<style>
+    select {
+  padding: 10px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
 
+.pricing-box {
+  text-align: center;
+}
+    </style>
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
 </style>
@@ -194,51 +204,39 @@ button{
 <h2>Our Product Range</h2>
 <div class="grid">
 <div class="card">
-<img src="https://thesustainabilityproject.life/shop/wp-content/uploads/sites/2/2021/07/Laundry-Sheets-4EM.jpg"><p>Laundry Sheets - ₹99 </p>
+<img src="https://thesustainabilityproject.life/shop/wp-content/uploads/sites/2/2021/07/Laundry-Sheets-4EM.jpg"><p>Laundry Sheets - ₹99</p>
 </div>
 <div class="card">
-<img src="https://thumbs.dreamstime.com/b/eco-friendly-cleaning-products-set-isolated-white-background-collection-eco-friendly-cleaning-products-sustainable-366008391.jpg"><p>Floor Cleaner - ₹99 </p>
+<img src="https://thumbs.dreamstime.com/b/eco-friendly-cleaning-products-set-isolated-white-background-collection-eco-friendly-cleaning-products-sustainable-366008391.jpg"><p>Floor Cleaner - ₹99</p>
 </div>
 <div class="card">
 <img src="https://i.pinimg.com/736x/43/bb/aa/43bbaa3999088a173925b1c4c30e602f.jpg">
-<p>Table Cleaner - ₹99 </p>
+<p>Table Cleaner - ₹99</p>
 </div>
 <div class="card">
 <img src="https://i.pinimg.com/736x/d5/90/ec/d590ec3c3cd4e1291b7649677b861b09.jpg">
-<p>Dishwash Soap(2Pcs) - ₹99 </p>
+<p>DishWash Soap(2Pcs) - ₹99</p>
 </div>
 </div>
 </div>
 </section>
 
-<section id="pricing">
-
+<!-- PRICING -->
+<div class="pricing-box">
   <h2>Pricing</h2>
 
-  <!-- 🔥 Product Selection -->
-  <select id="productSelect" onchange="selectProduct()">
-    <option value="">-- Select Product --</option>
-    <option value="0">Laundry Sheets</option>
-    <option value="1">Floor Cleaner</option>
-    <option value="2">Table Cleaner</option>
-    <option value="3">Dishwash Soap</option>
+  <select id="productSelect" onchange="updatePrice()">
+    <option value="99">Laundry Sheets - ₹99</option>
+    <option value="99">Floor Cleaner- ₹99</option>
+    <option value="99">Table Cleaner - ₹99</option>
+    <option value="99">DishWash Soap(2Pcs) - ₹99</option>
+
   </select>
 
-  <p id="priceText">Price: ₹99 per pack</p>
+  <p id="priceDisplay">₹99 per pack</p>
 
-  <!-- 🔥 Quantity -->
-  <button onclick="changeQty(-1)">-</button>
-  <span id="qty">1</span>
-  <button onclick="changeQty(1)">+</button>
-
-  <!-- 🔥 Total -->
-  <h3 id="total">Total: ₹0</h3>
-
-  <!-- 🔥 Button -->
-  <button onclick="addToCart()">Add to Cart</button>
-
-</section>
-
+  <button>Buy Now</button>
+</div>
 <!-- POPUP -->
 <div class="modal" id="modal">
 <div class="modal-content">
@@ -259,75 +257,33 @@ button{
 <h1>✅ Payment Successful</h1>
 <p>Thank you for choosing WashWise!</p>
 </div>
+
 <script>
+let qty=1,price=99;
 
-// 🔥 PRODUCTS DATA (MAIN PART)
-const products = [
-  { name: "Laundry Sheets", price: 99 },
-  { name: "Floor Cleaner", price: 99 },
-  { name: "Table Cleaner", price: 99 },
-  { name: "Dishwash Soap", price: 99 }
-];
-
-let selectedProduct = null;
-let quantity = 1;
-
-// 🔥 SELECT PRODUCT
-function selectProduct() {
-  let index = document.getElementById("productSelect").value;
-
-  if (index === "") return;
-
-  selectedProduct = products[index];
-  quantity = 1;
-
-  document.getElementById("qty").innerText = quantity;
-
-  updateTotal();
+function showSection(id){
+ document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
 }
 
-// 🔥 QUANTITY
-function changeQty(val) {
-  if (!selectedProduct) {
-    alert("Please select a product first!");
-    return;
-  }
-
-  quantity += val;
-
-  if (quantity < 1) quantity = 1;
-  if (quantity > 6) quantity = 6;
-
-  document.getElementById("qty").innerText = quantity;
-
-  updateTotal();
+function openModal(){document.getElementById('modal').style.display='flex'}
+function inc(){qty++;update()}
+function dec(){if(qty>1)qty--;update()}
+function update(){
+ document.getElementById('q').innerText=qty;
+ document.getElementById('total').innerText=qty*price;
 }
+function updatePrice() {
+  const select = document.getElementById("productSelect");
+  const price = select.value;
+  const text = select.options[select.selectedIndex].text;
 
-// 🔥 TOTAL CALCULATION (MAIN LOGIC)
-function updateTotal() {
-  let total = selectedProduct.price * quantity;
-
-  document.getElementById("total").innerText =
-    "Total: ₹" + total;
+  document.getElementById("priceDisplay").innerText = text;
 }
-
-// 🔥 ADD TO CART / BUY
-function addToCart() {
-  if (!selectedProduct) {
-    alert("Select a product!");
-    return;
-  }
-
-  alert(
-    selectedProduct.name +
-    "\nQty: " + quantity +
-    "\nTotal: ₹" + (selectedProduct.price * quantity)
-  );
-
-  // 👉 redirect if needed
-  // window.location.href = "payment.html";
+function addCart(){
+ document.getElementById('modal').style.display='none';
+ document.getElementById('success').style.display='block';
 }
-
 </script>
 
 </body>
